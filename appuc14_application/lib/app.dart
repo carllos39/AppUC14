@@ -1,4 +1,5 @@
 import 'package:appuc14_application/page/endereco.dart';
+import 'package:appuc14_application/page/login_home_page.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {
@@ -10,9 +11,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 58, 71, 183)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromARGB(255, 58, 71, 183),
+        ),
       ),
-      home: Endereco(),
+      home: LoginHomePage(),
     );
   }
 }

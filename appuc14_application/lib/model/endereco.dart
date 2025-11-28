@@ -1,26 +1,23 @@
 class Endereco {
-  String? cep;
-  String? logradouro;
-  String? bairro;
-  String? cidade;
-  String? estado;
-
+  final String? logradouro;
+  final String? bairro;
+  final String? localidade;
+  final String? uf;
 
   Endereco({
-    required this.cep,
-    required this.logradouro,
-    required this.bairro,
-    required this.cidade,
-    required this.estado,
+    this.logradouro,
+    this.bairro,
+    this.localidade,
+    this.uf,
   });
 
-  factory Endereco.fromJson(Map<String,dynamic>map){
+  factory Endereco.fromJson(Map<String, dynamic> json) {
     return Endereco(
-      cep: map['cep'],
-       logradouro: map['logradouro'], 
-       bairro: map['bairro'], 
-       cidade: map['cidade'], 
-       estado: map['estado']
-       );
+      logradouro: json['logradouro'],
+      bairro: json['bairro'],
+      localidade: json['localidade'],
+      uf: json['uf'],
+    );
   }
 }
+

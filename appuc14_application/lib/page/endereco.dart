@@ -1,77 +1,130 @@
+import 'package:appuc14_application/service/via_cep_service.dart';
 import 'package:flutter/material.dart';
+import 'package:appuc14_application/model/endereco.dart'; // <-- Modelo correto
 
-class Endereco extends StatefulWidget {
-  const Endereco({super.key});
+class EnderecoPage extends StatefulWidget {
+  const EnderecoPage({super.key});
 
   @override
-  State<Endereco> createState() => _EnderecoPageState();
+  State<EnderecoPage> createState() => _EnderecoPageState();
 }
 
-class _EnderecoPageState extends State<Endereco> {
-  TextEditingController controllerCep = TextEditingController();
-  TextEditingController controllerLogradouro = TextEditingController();
-  TextEditingController controllerBairro = TextEditingController();
-  TextEditingController controllerCidade = TextEditingController();
-  TextEditingController controllerEstado = TextEditingController();
+class _EnderecoPageState extends State<EnderecoPage> {
+  final TextEditingController controllerCep = TextEditingController();
+  final TextEditingController controllerLogradouro = TextEditingController();
+  final TextEditingController controllerBairro = TextEditingController();
+  final TextEditingController controllerCidade = TextEditingController();
+  final TextEditingController controllerEstado = TextEditingController();
+
+  Endereco? endereco;
+  bool isLoading = false;
+
+  final ViaCepService viaCepService = ViaCepService();
+
+  Future<void> buscarCep(String cep) async {
+    clearControllers();
+
+    setState(() => isLoading = true);
+
+    try {
+      Endereco? response = await viaCepService.buscarEndereco(cep);
+
+      if (response == null || response.logradouro == null) {
+        showDialog(
+          context: context,
+          builder: (context) => const AlertDialog(
+            icon: Icon(Icons.warning),
+            title: Text("Atenção"),
+            content: Text("CEP não encontrado"),
+          ),
+        );
+        controllerCep.clear();
+        return;
+      }
+
+      setState(() => endereco = response);
+
+      setControllersCep(endereco!);
+
+    } catch (erro) {
+      throw Exception("Erro ao buscar CEP: $erro");
+    } finally {
+      setState(() => isLoading = false);
+    }
+  }
+
+  void setControllersCep(Endereco e) {
+    controllerLogradouro.text = e.logradouro ?? "";
+    controllerBairro.text = e.bairro ?? "";
+    controllerCidade.text = e.localidade ?? "";
+    controllerEstado.text = e.uf ?? "";
+  }
+
+  void clearControllers() {
+    controllerLogradouro.clear();
+    controllerBairro.clear();
+    controllerCidade.clear();
+    controllerEstado.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('cadastro de endereço')),
+      appBar: AppBar(title: const Text('Cadastro de Endereço')),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+        padding: const EdgeInsets.all(30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
               controller: controllerCep,
-              decoration: InputDecoration(
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: "cep",
+                labelText: "CEP",
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextField(
               controller: controllerLogradouro,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: "Logradouro",
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextField(
               controller: controllerBairro,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: "Bairro",
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextField(
               controller: controllerCidade,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: "Cidade",
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextField(
               controller: controllerEstado,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: "Estado",
               ),
             ),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
+
             ElevatedButton(
               onPressed: () {
-                print(controllerCep);
-                print(controllerLogradouro);
-                print(controllerBairro);
-                print(controllerCidade);
-                print(controllerEstado);
+                buscarCep(controllerCep.text);
               },
-              child: Text('Buscar'),
+              child: isLoading
+                  ? const CircularProgressIndicator(color: Colors.white)
+                  : const Text('Buscar'),
             ),
           ],
         ),
@@ -79,3 +132,4 @@ class _EnderecoPageState extends State<Endereco> {
     );
   }
 }
+
