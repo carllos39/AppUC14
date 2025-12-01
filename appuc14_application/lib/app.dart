@@ -1,5 +1,6 @@
 import 'package:appuc14_application/page/endereco.dart';
 import 'package:appuc14_application/page/login_home_page.dart';
+import 'package:appuc14_application/page/map_page.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
           seedColor: const Color.fromARGB(255, 58, 71, 183),
         ),
       ),
-      home: LoginHomePage(),
+      home: MapPage(),
     );
   }
 }
