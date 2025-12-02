@@ -1,6 +1,6 @@
 import 'package:appuc14_application/service/via_cep_service.dart';
 import 'package:flutter/material.dart';
-import 'package:appuc14_application/model/endereco.dart'; // <-- Modelo correto
+import 'package:appuc14_application/model/endereco.dart';
 
 class EnderecoPage extends StatefulWidget {
   const EnderecoPage({super.key});
@@ -10,6 +10,8 @@ class EnderecoPage extends StatefulWidget {
 }
 
 class _EnderecoPageState extends State<EnderecoPage> {
+  final _formKey = GlobalKey<FormState>();
+
   final TextEditingController controllerCep = TextEditingController();
   final TextEditingController controllerLogradouro = TextEditingController();
   final TextEditingController controllerBairro = TextEditingController();
@@ -22,8 +24,9 @@ class _EnderecoPageState extends State<EnderecoPage> {
   final ViaCepService viaCepService = ViaCepService();
 
   Future<void> buscarCep(String cep) async {
-    clearControllers();
+    if (!_formKey.currentState!.validate()) return;
 
+    clearControllers();
     setState(() => isLoading = true);
 
     try {
@@ -43,11 +46,11 @@ class _EnderecoPageState extends State<EnderecoPage> {
       }
 
       setState(() => endereco = response);
-
       setControllersCep(endereco!);
-
     } catch (erro) {
-      throw Exception("Erro ao buscar CEP: $erro");
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Erro ao buscar CEP: $erro")));
     } finally {
       setState(() => isLoading = false);
     }
@@ -73,63 +76,112 @@ class _EnderecoPageState extends State<EnderecoPage> {
       appBar: AppBar(title: const Text('Cadastro de Endereço')),
       body: Padding(
         padding: const EdgeInsets.all(30),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: controllerCep,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: "CEP",
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: controllerLogradouro,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: "Logradouro",
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: controllerBairro,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: "Bairro",
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: controllerCidade,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: "Cidade",
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: controllerEstado,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: "Estado",
-              ),
-            ),
-            const SizedBox(height: 15),
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextFormField(
+                  maxLength: 8,
+                  controller: controllerCep,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "CEP",
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Informe o CEP";
+                    }
+                    if (value.length != 8) {
+                      return "O CEP deve ter 8 números";
+                    }
+                    if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                      return "Digite apenas números";
+                    }
+                    return null;
+                  },
+                ),
 
-            ElevatedButton(
-              onPressed: () {
-                buscarCep(controllerCep.text);
-              },
-              child: isLoading
-                  ? const CircularProgressIndicator(color: Colors.white)
-                  : const Text('Buscar'),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: controllerLogradouro,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "Logradouro",
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Campo obrigatório";
+                    }
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: controllerBairro,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "Bairro",
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Campo obrigatório";
+                    }
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: controllerCidade,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "Cidade",
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Campo obrigatório";
+                    }
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: controllerEstado,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "Estado",
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Campo obrigatório";
+                    }
+                    if (value.length != 2) {
+                      return "Use a sigla do estado (ex: SP)";
+                    }
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 20),
+
+                ElevatedButton(
+                  onPressed: isLoading
+                      ? null
+                      : () => buscarCep(controllerCep.text),
+                  child: isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text('Buscar CEP'),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
   }
 }
-

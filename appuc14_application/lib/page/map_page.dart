@@ -45,7 +45,7 @@ class _MapPageState extends State<MapPage> {
     final query = searchController.text.trim();
     if (query.isEmpty) return;
 
-    final latLng = await _geocodingService.searchAddress(query);
+     final latLng = await _geocodingService.searchAddress(query);
 
     if (latLng == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -60,9 +60,11 @@ class _MapPageState extends State<MapPage> {
 
     _mapController.move(latLng, 16);
 
-    // Perguntar nome para salvar
+    //Perguntar nome para salvar
     _showSaveDialog(latLng);
   }
+
+  
 
   void _showSaveDialog(LatLng pos) {
     final nameController = TextEditingController();
@@ -85,10 +87,7 @@ class _MapPageState extends State<MapPage> {
             onPressed: () async {
               final name = nameController.text.trim();
               if (name.isNotEmpty) {
-                await _firestoreService.saveLocation(
-                  name: name,
-                  position: pos,
-                );
+                await _firestoreService.saveLocation(name: name, position: pos);
               }
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
@@ -110,12 +109,12 @@ class _MapPageState extends State<MapPage> {
           IconButton(
             icon: const Icon(Icons.my_location),
             onPressed: _loadLocation,
-          )
+          ),
         ],
       ),
       body: Column(
         children: [
-          // Campo de busca
+          //Campo de busca
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
@@ -143,7 +142,7 @@ class _MapPageState extends State<MapPage> {
                     children: [
                       TileLayer(
                         urlTemplate:
-                          "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                            "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                       ),
 
                       MarkerLayer(
@@ -157,9 +156,9 @@ class _MapPageState extends State<MapPage> {
                               color: Colors.red,
                               size: 40,
                             ),
-                          )
+                          ),
                         ],
-                      )
+                      ),
                     ],
                   ),
           ),
@@ -168,4 +167,3 @@ class _MapPageState extends State<MapPage> {
     );
   }
 }
-
