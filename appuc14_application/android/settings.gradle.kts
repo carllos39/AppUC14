@@ -14,15 +14,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "SeuProjeto"
+rootProject.name = "appuc14_application"
+
 include(":app")
 
-// ====== Correção do buildDirectory ======
-
-val newBuildDir = layout.buildDirectory.dir("../../build").get()
-layout.buildDirectory.value(newBuildDir)
-
-subprojects {
-    val newSubprojectBuildDir = newBuildDir.dir(name)
-    layout.buildDirectory.value(newSubprojectBuildDir)
-}

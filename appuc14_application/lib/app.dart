@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
           seedColor: const Color.fromARGB(255, 58, 71, 183),
         ),
       ),
-      home: Menu(),
+      home: LoginHomePage(),
     );
   }
 }

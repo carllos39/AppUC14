@@ -73,6 +73,7 @@ class _EnderecoPageState extends State<EnderecoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue,
       appBar: AppBar(title: const Text('Cadastro de Endereço')),
       body: Padding(
         padding: const EdgeInsets.all(30),
@@ -111,12 +112,6 @@ class _EnderecoPageState extends State<EnderecoPage> {
                     border: OutlineInputBorder(),
                     labelText: "Logradouro",
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Campo obrigatório";
-                    }
-                    return null;
-                  },
                 ),
 
                 const SizedBox(height: 10),
@@ -126,12 +121,6 @@ class _EnderecoPageState extends State<EnderecoPage> {
                     border: OutlineInputBorder(),
                     labelText: "Bairro",
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Campo obrigatório";
-                    }
-                    return null;
-                  },
                 ),
 
                 const SizedBox(height: 10),
@@ -141,12 +130,6 @@ class _EnderecoPageState extends State<EnderecoPage> {
                     border: OutlineInputBorder(),
                     labelText: "Cidade",
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Campo obrigatório";
-                    }
-                    return null;
-                  },
                 ),
 
                 const SizedBox(height: 10),
@@ -156,15 +139,6 @@ class _EnderecoPageState extends State<EnderecoPage> {
                     border: OutlineInputBorder(),
                     labelText: "Estado",
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Campo obrigatório";
-                    }
-                    if (value.length != 2) {
-                      return "Use a sigla do estado (ex: SP)";
-                    }
-                    return null;
-                  },
                 ),
 
                 const SizedBox(height: 20),

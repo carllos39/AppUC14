@@ -45,12 +45,12 @@ class _MapPageState extends State<MapPage> {
     final query = searchController.text.trim();
     if (query.isEmpty) return;
 
-     final latLng = await _geocodingService.searchAddress(query);
+    final latLng = await _geocodingService.searchAddress(query);
 
     if (latLng == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Endereço não encontrado.")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Endereço não encontrado.")));
       return;
     }
 
@@ -63,8 +63,6 @@ class _MapPageState extends State<MapPage> {
     //Perguntar nome para salvar
     _showSaveDialog(latLng);
   }
-
-  
 
   void _showSaveDialog(LatLng pos) {
     final nameController = TextEditingController();
@@ -103,6 +101,7 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue,
       appBar: AppBar(
         title: const Text("Mapa com Busca"),
         actions: [
