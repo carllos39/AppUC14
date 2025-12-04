@@ -32,16 +32,16 @@ class _LoginHomePageState extends State<LoginHomePage> {
           const SnackBar(content: Text("Login realizado com sucesso!")),
         );
 
-        // NAVEGA PARA O MENU
-        Navigator.push(
+        // NAVEGAR PARA O MENU
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const Menu()),
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Erro: $e")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Erro: $e")),
+      );
     } finally {
       setState(() => loading = false);
     }
@@ -74,9 +74,8 @@ class _LoginHomePageState extends State<LoginHomePage> {
                   if (value == null || value.isEmpty) {
                     return "Informe o email";
                   }
-                  if (!RegExp(
-                    r"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$",
-                  ).hasMatch(value)) {
+                  if (!RegExp(r"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$")
+                      .hasMatch(value)) {
                     return "Email inválido";
                   }
                   return null;
@@ -118,7 +117,9 @@ class _LoginHomePageState extends State<LoginHomePage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const Cadastro()),
+                    MaterialPageRoute(
+                      builder: (context) => const Cadastro(),
+                    ),
                   );
                 },
                 child: const Text("Cadastrar"),
