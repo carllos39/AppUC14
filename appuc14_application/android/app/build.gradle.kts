@@ -40,6 +40,8 @@ android {
 dependencies {
     // Multidex necessário para Firebase (evita erro de métodos)
     implementation("androidx.multidex:multidex:2.0.1")
+    implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
+    implementation("com.google.firebase:firebase-analytics")
 }
 
 flutter {
